@@ -88,18 +88,18 @@
    - Library
 ##Atom Identifier & Literal
  - WhiteSpace
-   - <TAB>：\t
-   - <VT>： \v
-   - <FF>：\f
-   - <SP>：\s
-   - <NBSP>：NO-BREAK SPACE
-   - <ZWNBSP>：ZERO WIDTH NO-BREAK SPACE
-   - <USP>
+   - \<TAB\>：`\t`
+   - \<VT\>： `\v`
+   - \<FF\>：`\f` 
+   - \<SP\>：`\s`
+   - \<NBSP\>：NO-BREAK SPACE
+   - \<ZWNBSP\>：ZERO WIDTH NO-BREAK SPACE
+   - \<USP\>
  - LineTerminator
-   - <LF>：\n
-   - <CR>：\r
-   - <LS>
-   - <PS>
+   - \<LF\>：`\n`
+   - \<CR\>：`\r`
+   - \<LS\>
+   - \<PS\>
  - Comment
    - // comment
    - /* comment */

@@ -1,30 +1,25 @@
 ##匹配所有 Number 直接量
-```
-    /*
-    * 开头的符号和e、E后面的符号可能有可能没有
-    * 有e或者E后面必定跟着一个数字
-    * js小数点前后必须跟着一个值，比如12.表示12，.12表示0.12
-    * */
+```js
     //带符号的整数、浮点数、科学计数法
-    let reg = /[+-]?(\d+([.]\d*)|\d*([.]\d+))([eE][+-]?\d+)?/g
+    let str1 = /[+-]?(\d+([.]\d*)|\d*([.]\d+))([eE][+-]?\d+)?/g;
     //二进制
-    let reg1 = /^0[bB][01]+/g
+    let str2 = /^0[bB][01]+/g;
     //八进制
-    let reg2 = /^0[Oo]?[0-7]+/
+    let str3 = /^0[Oo]?[0-7]+/;
     //16进制
-    let reg3 = /^0[xX][0-9a-fA-F]+/
-    let res = /[+-]?(\d+([.]\d*)|\d*([.]\d+))([eE][+-]?\d+)?|^0[bB][01]+|^0[Oo]?[0-7]+|^0[xX][0-9a-fA-F]+/
+    let str4 = /^0[xX][0-9a-fA-F]+/;
+    let str5 = /[+-]?(\d+([.]\d*)|\d*([.]\d+))([eE][+-]?\d+)?|^0[bB][01]+|^0[Oo]?[0-7]+|^0[xX][0-9a-fA-F]+/;
 ```
 ##匹配所有的字符串直接量
-```
-    const str = '1‘112\"2233“35”55\"66\'6\'7“77';
-    const reg = /[\u201C\u201D\u2018\u2019\u0020\u0022][^\u201C\u201D\u2018\u2019\u0020\u0022]*[\u201C\u201D\u2018\u2019\u0020\u0022]/g;
-    console.log(str.replace(reg, ','));
+```js
+    const str5 = "~!@#$%^&*()_+-=QWERTYUIOP{}qwertyuiop[]1234567890asdfghjkl;\'ASDFGHJKL:\"ZXCVBNM<>?zxcvbnm,./\\\|~！@#￥%……&*（）——+-=【】、|；‘’：“”，。、《》？";
+    const reg = /[\u0020-\u007E\u0000\u0009-\u000D][\u0020-\u007E\u0000\u0009-\u000D]*[\u0020-\u007E\u0000\u0009-\u000D]/g;
+    console.log(str5.replace(reg, ''));
 ```
 
 
 ##UTF8 Encoding函数
-```
+```js
     const encodingUtf8 = (str) => {
         return str.split('').map((s) => {
             const binary = s.codePointAt(0).toString(2);

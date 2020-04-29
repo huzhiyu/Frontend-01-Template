@@ -1,6 +1,6 @@
 # 每周总结可以写在这里
 
-###乔姆斯基谱系
+### 乔姆斯基谱系
 ```
     "a"
     "b"
@@ -9,7 +9,7 @@
     <Program>:= ("a" + | "b"+)+
     ababbbbbaaa
 ```
-###巴科斯范式
+### 巴科斯范式
 ```
     <Number> = "0" | "1" | "2" | ...... | "9"
     <DecimalNumber> = "0" | (("1|" | "2" | ...... | "9") <Number>* )
@@ -19,7 +19,7 @@
     1 093023412
     01
 ```
-###生产式（BNF）
+### 生产式（BNF）
 ```
     <Number> ::= "0" | "1" | "2" | ...... | "9"
     <DecimalNumber> ::= "0" | (("1|" | "2" | ...... | "9") <Number>* )
@@ -35,11 +35,11 @@
         <LogicalExpression> "||" <AdditiveExpression> |
         <LogicalExpression> "&&" <AdditiveExpression>
 ```
-###无限制文法
+### 无限制文法
 ```
     <a> <b> ::= "c"
 ```
-###上下文相关文法
+### 上下文相关文法
 ```
     "a" <b> "c" ::= "a" "x" "c"
     "```四则运算\n" <LogicalExpression> "```" = "```四则运算"
@@ -48,11 +48,11 @@
     ```
 ```
 
-###上下文无关文法
+### 上下文无关文法
 ```
     <A> ::= ?
 ```
-###正则文法
+### 正则文法
 ```
     <A> ::= <A>?
     <A> ::=?<A>
@@ -63,7 +63,7 @@
     }
     2**1**2
 ```
-##一般命令式编程语言
+## 一般命令式编程语言
 
  - Atom
    - Identifier
@@ -86,7 +86,7 @@
    - Mould
    - Package
    - Library
-##Atom Identifier & Literal
+## Atom Identifier & Literal
  - WhiteSpace
    - \<TAB\>：`\t`
    - \<VT\>： `\v`
@@ -109,7 +109,7 @@
    - NumericLiteral
    - StringLiteral
    - Template
-##基本类型
+## 基本类型
  - Type
    - Number
    - 浮点数比较: Math.abs(0.1 + 0.2 - 0.3) < Number.EPSILON
@@ -125,6 +125,5 @@
    - Null
    - Undifined
    - Symbol
-##重学JavaScript
  
 

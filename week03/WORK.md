@@ -1,4 +1,4 @@
-##convertStringToNumber
+## convertStringToNumber
 ```js
     const convertStringToNumber = (str, notation=10) => {
         let num = 0;
@@ -25,7 +25,7 @@
     };
     console.log(convertStringToNumber("2020极客时间", 10));
 ```
-##convertNumberToString
+## convertNumberToString
 ```js
     const convertNumberToString = (num, significant = 2) => {
         let str = "";
@@ -64,7 +64,7 @@
     };
     console.log(convertNumberToString(123.0459, 2));
 ```
-##JavaScript 标准中，哪些对象是我们无法实现的
+## JavaScript 标准中，哪些对象是我们无法实现的
 
 - Bound Function Exotic Objects  
     - Internal Slots

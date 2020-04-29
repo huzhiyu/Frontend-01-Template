@@ -1,44 +1,153 @@
-##匹配所有 Number 直接量
+##convertStringToNumber
 ```js
-    //带符号的整数、浮点数、科学计数法
-    let str1 = /[+-]?(\d+([.]\d*)|\d*([.]\d+))([eE][+-]?\d+)?/g;
-    //二进制
-    let str2 = /^0[bB][01]+/g;
-    //八进制
-    let str3 = /^0[Oo]?[0-7]+/;
-    //16进制
-    let str4 = /^0[xX][0-9a-fA-F]+/;
-    let str5 = /[+-]?(\d+([.]\d*)|\d*([.]\d+))([eE][+-]?\d+)?|^0[bB][01]+|^0[Oo]?[0-7]+|^0[xX][0-9a-fA-F]+/;
-```
-##匹配所有的字符串直接量
-```js
-    const str5 = "~!@#$%^&*()_+-=QWERTYUIOP{}qwertyuiop[]1234567890asdfghjkl;\'ASDFGHJKL:\"ZXCVBNM<>?zxcvbnm,./\\\|~！@#￥%……&*（）——+-=【】、|；‘’：“”，。、《》？";
-    const reg = /[\u0020-\u007E\u0000\u0009-\u000D][\u0020-\u007E\u0000\u0009-\u000D]*[\u0020-\u007E\u0000\u0009-\u000D]/g;
-    console.log(str5.replace(reg, ''));
-```
-
-
-##UTF8 Encoding函数
-```js
-    const encodingUtf8 = (str) => {
-        return str.split('').map((s) => {
-            const binary = s.codePointAt(0).toString(2);
-            if (binary.length < 8) {
-                return binary.padStart(8, '0');
+    const convertStringToNumber = (str, notation=10) => {
+        let num = 0;
+        let i = 0;
+        while(i < str.length) {
+            let c = str.charAt(i);
+            if(c === '.') {
+                break
             }
-            const result = [];
-            const contrast = ['0', '110', '1110', '11110'];
-            for (let i = binary.length; i > 0; i -= 6) {
-                const str = binary.slice(Math.max(i - 6, 0), i);
-                if (str.length === 6) {
-                    result.unshift(`10${str}`);
-                } else {
-                    const add = contrast[result.length];
-                    result.unshift(`${add}${str.padStart(8 - add.length, '0')}`);
-                }
-            }
-            return result.join('、');
-        });
+            let code = str.charCodeAt(i) - 48;
+            num = num * notation + code;
+            i += 1;
+        }
+        i += 1;
+
+        let multiple = 1;
+        while(i < str.length) {
+            let code = str.charCodeAt(i) - 48;
+            multiple *= notation;
+            num += code / multiple;
+            i += 1;
+        }
+        return num
     };
-    console.log(encodingUtf8('加油加油！！！'));
+    console.log(convertStringToNumber("2020极客时间", 10));
 ```
+##convertNumberToString
+```js
+    const convertNumberToString = (num, significant = 2) => {
+        let str = "";
+        if (num < 0) {
+            str += '-';
+        }
+        let integer = Math.floor(num);
+        let fraction = num % 1;
+        let multiple = 10;
+        let intNum = Math.abs(integer / multiple);
+        while(intNum >= 10) {
+            multiple *= 10;
+            intNum = intNum / multiple;
+        }
+        let absNum = Math.abs(integer);
+        let tmpNum = 0;
+        while(multiple >= 1) {
+            tmpNum = Math.floor(absNum / multiple);
+            str += String.fromCharCode(tmpNum + 48);
+            absNum = absNum - tmpNum * multiple;
+            multiple /= 10;
+        }
+        let fum = 0;
+        if (fraction > Number.EPSILON) {
+            str += '.';
+            let cnt = 0;
+            while (cnt < significant) {
+                fum = fraction * 10;
+                let n = Math.floor(fum);
+                str += String.fromCharCode(n + 48);
+                cnt += 1;
+                fraction = fum % 1;
+            }
+        }
+        return str;
+    };
+    console.log(convertNumberToString(123.0459, 2));
+```
+##JavaScript 标准中，哪些对象是我们无法实现的
+
+- Bound Function Exotic Objects  
+    - Internal Slots
+        - [[BoundTargetFunction]]  
+        可以调用的对象 -- The wrapped function object.
+        - [[BoundThis]]  
+        任何类型 -- The value that is always passed as the this value when calling the wrapped function.
+        - [[BoundArguments]]  
+        任何 List 类型（Argument）-- A list of values whose elements are used as the first arguments to any call to the wrapped function.
+
+    - internal methods
+        - [[Call]] ( thisArgument, argumentsList )
+        - [[Construct]] ( argumentsList, newTarget )
+        - BoundFunctionCreate ( targetFunction, boundThis, boundArgs )
+
+- Array Exotic Objects  
+internal methods
+    - [[DefineOwnProperty]] ( P, Desc )
+    - ArrayCreate ( length [ , proto ] )
+    - ArraySpeciesCreate ( originalArray, length )
+    - ArraySetLength ( A, Desc )
+
+- String Exotic Objects  
+internal methods
+    - [[GetOwnProperty]] ( P )
+    - [[DefineOwnProperty]] ( P, Desc )
+    - [[OwnPropertyKeys]] ( )
+    - StringCreate ( value, prototype )
+    - StringGetOwnProperty ( S, P )
+
+- Arguments Exotic Objects  
+internal methods
+    - [[GetOwnProperty]] ( P )
+    - [[DefineOwnProperty]] ( P, Desc )
+    - [[Get]] ( P, Receiver )
+    - [[Set]] ( P, V, Receiver )
+    - [[Delete]] ( P )
+    - CreateUnmappedArgumentsObject ( argumentsList )
+    - CreateMappedArgumentsObject ( func, formals, argumentsList, env )
+    - MakeArgGetter ( name, env )
+    - MakeArgSetter ( name, env )
+
+- Integer-Indexed Exotic Objects  
+internal methods
+    - [[GetOwnProperty]] ( P )
+    - [[HasProperty]] ( P )
+    - [[DefineOwnProperty]] ( P, Desc )
+    - [[Get]] ( P, Receiver )
+    - [[Set]] ( P, V, Receiver )
+    - [[OwnPropertyKeys]] ( )
+    - IntegerIndexedObjectCreate ( prototype, internalSlotsList )
+    - IntegerIndexedElementGet ( O, index )
+    - IntegerIndexedElementSet ( O, index, value )
+
+- Module Namespace Exotic Objects  
+internal methods
+    - [[SetPrototypeOf]] ( V )
+    - [[IsExtensible]] ( )
+    - [[PreventExtensions]] ( )
+    - [[GetOwnProperty]] ( P )
+    - [[DefineOwnProperty]] ( P, Desc )
+    - [[HasProperty]] ( P )
+    - [[Get]] ( P, Receiver )
+    - [[Set]] ( P, V, Receiver )
+    - [[Delete]] ( P )
+    -  [[OwnPropertyKeys]] ( )
+    - ModuleNamespaceCreate ( module, exports )
+-  Immutable Prototype Exotic Objects  
+inernal methods
+    - [[SetPrototypeOf]] ( V )
+    - SetImmutablePrototype ( O, V )
+
+- Proxy Object
+    - [[GetPrototypeOf]] getPrototypeOf
+    - [[SetPrototypeOf]] setPrototypeOf
+    - [[IsExtensible]] isExtensible
+    - [[PreventExtensions]] preventExtensions
+    - [[GetOwnProperty]] getOwnPropertyDescriptor
+    - [[DefineOwnProperty]] defineProperty
+    - [[HasProperty]] has
+    - [[Get]] get
+    - [[Set]] set
+    - [[Delete]] deleteProperty
+    - [[OwnPropertyKeys]] ownKeys
+    - [[Call]] apply
+    - [[Construct]] construct

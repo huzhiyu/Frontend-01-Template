@@ -1,6 +1,4 @@
 const net = require('net');
-const parser = require('./parser.js');
-
 class Request {
     /*
     method, url = host + port + path
@@ -14,21 +12,21 @@ class Request {
     body: k-v
     */
     constructor(options) {
-        this.method = options.method || 'GET';
+        this.method = options.method || "GET";
         this.host = options.host;
         this.port = options.port || 80;
-        this.path = options.path || '/';
+        this.path = options.path || "/";
         this.body = options.body || {};
         this.headers = options.headers || {};
-        if (!this.headers['Content-Type']) {
-            this.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+        if (!this.headers["Content-Type"]) {
+            this.headers["Content-Type"] = "application/x-www-form-urlencoded";
         }
-        if (this.headers['Content-Type'] === 'application/json') {
+        if (this.headers["Content-Type"] === "application/json") {
             this.bodyText = JSON.stringify(this.body);
-        } else if (this.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
+        } else if (this.headers["Content-Type"] === "application/x-www-form-urlencoded") {
             this.bodyText = Object.keys(this.body).map(key => `${key}=${encodeURIComponent(this.body[key])}`).join('&');
         }
-        this.headers['Content-Length'] = this.bodyText.length;
+        this.headers["Content-Length"] = this.bodyText.length;
     }
     toString() {
         return `${this.method} ${this.path} HTTP/1.1\r\nHOST: ${this.host}\r\n${Object.keys(this.headers).map(key => `${key}: ${this.headers[key]}`).join('\r\n')}\r\n\r\n${this.bodyText}\r\n`;
@@ -44,7 +42,7 @@ class Request {
                     port: this.port
                 }, () => {
                     connection.write(this.toString());
-                });
+                })
             }
             connection.on('data', (data) => {
                 parse.receive(data.toString());
@@ -74,10 +72,10 @@ class ResponseParser {
         this.WAITING_HEADER_BLOCK_END = 6;
         this.WAITING_BODY = 7;
         this.current = this.WAITING_STATUS_LINE;
-        this.statusLine = '';
+        this.statusLine = "";
         this.headers = {};
-        this.headerName = '';
-        this.headerValue = '';
+        this.headerName = "";
+        this.headerValue = "";
         this.bodyParse = null;
     }
     get isFinished() {
@@ -114,9 +112,8 @@ class ResponseParser {
                 this.current = this.WAITING_HEADER_SPACE;
             } else if (char === '\r') {
                 this.current = this.WAITING_HEADER_BLOCK_END;
-                if (this.headers['Transfer-Encoding'] === 'chunked') {
+                if (this.headers['Transfer-Encoding'] === 'chunked')
                     this.bodyParse = new TrunkedBodyParser();
-                }
             } else {
                 this.headerName += char;
             }
@@ -128,8 +125,8 @@ class ResponseParser {
             if (char === '\r') {
                 this.current = this.WAITING_HEADER_LINE_END;
                 this.headers[this.headerName] = this.headerValue;
-                this.headerName = '';
-                this.headerValue = '';
+                this.headerName = "";
+                this.headerValue = "";
             } else {
                 this.headerValue += char;
             }
@@ -204,15 +201,15 @@ class TrunkedBodyParser {
 }
 void async function () {
     const options = {
-        method: 'POST',
-        path: '/',
-        host: '127.0.0.1',
+        method: "POST",
+        path: "/",
+        host: "127.0.0.1",
         port: 7070,
         headers: {
-            ['X-Foo2']: 'customed'
+            ["X-Foo2"]: "customed"
         },
         body: {
-            name: 'elle'
+            name: "elle"
         }
     };
     let request = new Request(options);
@@ -222,20 +219,20 @@ void async function () {
 
 
 const client = net.createConnection({
-    host: '127.0.0.1',
+    host: "127.0.0.1",
     port: 7070
 }, () => {
     console.log('connected to server!');
     const options = {
-        method: 'POST',
-        path: '/',
-        host: '127.0.0.1',
+        method: "POST",
+        path: "/",
+        host: "127.0.0.1",
         port: 7070,
         headers: {
-            ['X-Foo2']: 'customed'
+            ["X-Foo2"]: "customed"
         },
         body: {
-            name: 'elle'
+            name: "elle"
         }
     };
     let request = new Request(options);

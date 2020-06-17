@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicTacToe</title>
+    <style>
+        #board {
+            width: 350px;
+            user-select: none;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #000;
+            background-color: #804F17;
+            display: inline-block;
+            vertical-align: middle;
+
+            line-height: 100px;
+            font-size: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="board"></div>
+<script>
+    let pattern = [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
+    ];
+    let color = 1;
+
+    show = () => {
+        const board = document.getElementById('board');
+        board.innerHTML = '';
+        pattern.forEach((i, l) => {
+            i.forEach((j, k) => {
+                let cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.innerHTML = j === 2 ? '❌' : j === 1 ? '○' : "";
+                cell.addEventListener('click', () => move(k, l));
+                board.appendChild(cell);
+            });
+        });
+    };
+
+    move = (x, y) => {
+        if (pattern[y][x] !== 0) {
+            return;
+        }
+        pattern[y][x] = color;
+        show();
+        if (check(pattern, color)) {
+            return;
+        }
+        color = 3 - color;
+    };
+
+    check = (pattern, color) => {
+        let win = true;
+        pattern.forEach(i => {
+            i.forEach(j => {
+                if (j !== color) {
+                    win = false;
+                    return false;
+                }
+            });
+            if (win) {
+                return true;
+            }
+        });
+        pattern.forEach((i, l) => {
+            let win = true;
+            i.forEach(j => {
+                if (j[l] !== color) {
+                    win = false;
+                    return false;
+                }
+            });
+            if (win) {
+                return true;
+            }
+        });
+        {
+            let win = true;
+            pattern.forEach((i, k) => {
+                if (i[k] !== color) {
+                    win = false;
+                    return false;
+                }
+            });
+            if (win) {
+                return true;
+            }
+        }
+        {
+            let win = true;
+            pattern.forEach((i, k) => {
+                if (i[2 - k] !== color) {
+                    win = false;
+                    return false;
+                }
+            });
+            if (win) {
+                return true;
+            }
+        }
+        return false;
+    };
+    show();
+</script>
+</body>
+</html>

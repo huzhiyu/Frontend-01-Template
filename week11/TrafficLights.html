@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>红绿灯</title>
+    <style>
+        div {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            border-radius: 50px;
+            margin: 30px;
+            background-color: grey;
+        }
+
+        .green.light {
+            background-color: green;
+        }
+
+        .yellow.light {
+            background-color: yellow;
+        }
+
+        .red.light {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+<div class="green"></div>
+<div class="yellow"></div>
+<div class="red"></div>
+<button id="next">next</button>
+</body>
+<script>
+    function green() {
+        const lights = document.getElementsByTagName("div");
+        for (let i = 0; i < 3; i += 1) {
+            lights[i].classList.remove("light");
+        }
+        document.getElementsByClassName("green")[0].classList.add('light')
+    }
+
+    function red() {
+        const lights = document.getElementsByTagName("div");
+        for (let i = 0; i < 3; i += 1) {
+            lights[i].classList.remove("light");
+        }
+        document.getElementsByClassName("red")[0].classList.add('light')
+    }
+
+    function yellow() {
+        const lights = document.getElementsByTagName("div");
+        for (let i = 0; i < 3; i += 1) {
+            lights[i].classList.remove("light");
+        }
+        document.getElementsByClassName("yellow")[0].classList.add('light')
+    }
+
+    function sleep(t) {
+        return new Promise((resolve, reject) => {
+            setTimeout(resolve, t);
+        })
+    }
+
+    function happen(element, eventName) {
+        return new Promise((resolve, reject) => {
+            element.addEventListener(eventName, resolve, {once: true});
+        })
+    }
+
+    function go() {
+        green();
+        setTimeout(yellow, 1000);
+        setTimeout(red, 1200);
+        setTimeout(go, 1700)
+    }
+
+    function go2() {
+        green();
+        setTimeout(function () {
+            yellow();
+            setTimeout(function () {
+                red();
+                setTimeout(function () {
+                    go();
+                }, 500);
+            }, 200);
+        }, 1000);
+    }
+
+    function go4() {
+        green();
+        sleep(1000).then(() => {
+            yellow();
+            return sleep(200);
+        }).then(() => {
+            red();
+            return sleep(500);
+        }).then(go4)
+    }
+
+    async function go6() {
+        while (true) {
+            green();
+            await sleep(1000);
+            yellow();
+            await sleep(200);
+            red();
+            await sleep(500);
+        }
+    }
+
+    async function go8() {
+        while (true) {
+            green();
+            await happen(document.getElementById('next'), 'click');
+            yellow();
+            await happen(document.getElementById('next'), 'click');
+            red();
+            await happen(document.getElementById('next'), 'click');
+        }
+    }
+
+    // go();
+    // go2();
+    // go4();
+    // go6();
+    go8();
+</script>
+</html>
